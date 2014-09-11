@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import com.orcchg.javatask.numbenc.struct.Automaton;
+import com.orcchg.javatask.numbenc.struct.Solver;
 
 public class MainSolution {
   private Solver mSolver;

@@ -13,7 +13,7 @@ public class AutomatonNode {
   private final ArrayList<Integer> mTransitions;
   
   static final int ALPHABET_SIZE = 26;
-  static final int EDJE_IS_ABSENT = -1;
+  static final int EDGE_IS_ABSENT = -1;
   
   /* Construction */
   // --------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public class AutomatonNode {
     mHasUmlaut = builder.mHasUmlaut;
     mIsUpperCase = builder.mIsUpperCase;
     mIsTerminal = builder.mIsTerminal;
-    mTransitions = new ArrayList<Integer>(Collections.nCopies(ALPHABET_SIZE, EDJE_IS_ABSENT));
+    mTransitions = new ArrayList<Integer>(Collections.nCopies(ALPHABET_SIZE, EDGE_IS_ABSENT));
   }
   
   public static class Builder {
@@ -37,7 +37,7 @@ public class AutomatonNode {
     
     public Builder() {
       mIndexInAutomaton = 0;
-      mParentNodeIndex = EDJE_IS_ABSENT;
+      mParentNodeIndex = EDGE_IS_ABSENT;
       mLabelFromParent = 0;
       mHasUmlaut = false;
       mIsTerminal = false;

@@ -56,7 +56,7 @@ public class Automaton {
   public AutomatonNode makeTransition(int from_node, char label) {
     label = Character.toLowerCase(label);
     int to_node = mNodes.get(from_node).getTransitions().get(label);
-    if (to_node != AutomatonNode.EDJE_IS_ABSENT) {
+    if (to_node != AutomatonNode.EDGE_IS_ABSENT) {
       return mNodes.get(to_node);
     } else {
       return null;
@@ -66,6 +66,6 @@ public class Automaton {
   /* Private methods */
   // --------------------------------------------------------------------------
   private boolean isEdgeAbsent(int char_index, int node_index) {
-    return mNodes.get(node_index).getTransitions().get(char_index) == AutomatonNode.EDJE_IS_ABSENT;
+    return mNodes.get(node_index).getTransitions().get(char_index) == AutomatonNode.EDGE_IS_ABSENT;
   }
 }
