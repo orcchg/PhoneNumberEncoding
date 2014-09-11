@@ -42,6 +42,7 @@ public class Solver {
       // no word representation for such number
       return answer;
     }
+    // TODO: calculate answer
 
     return answer;
   }
@@ -83,6 +84,7 @@ public class Solver {
     }
     // prefix reached end of automaton
     List<String> prefixes = gatherWords(automaton, terminal_nodes);
+    // TODO: union results with delimeter
     
     // process suffix of digital number recursively
     String digital_suffix = digital_number.substring(i);
