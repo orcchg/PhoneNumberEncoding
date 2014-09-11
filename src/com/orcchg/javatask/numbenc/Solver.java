@@ -98,35 +98,40 @@ public class Solver {
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
     StringBuilder prefix = new StringBuilder().append(automaton.getID());  // start word with root character
+    
+    List<AutomatonNode> terminal_nodes = new ArrayList<>(3000);
+    
     Queue<Integer> track = new LinkedList<>();
     Queue<Integer> buffer = new LinkedList<>();
     track.add(automaton.getNode(0).getIndex());  // start walking from root node
     buffer.addAll(track);
     
     int suffix_index = 0;
-    for (int i = 1; i < digital_number.length(); ++i) {
-      char next_digit = digital_number.charAt(i);
-      int next_value = Character.getNumericValue(next_digit);
-      
-      while (!track.isEmpty()) {
-        for (char label : LookupTable.map[next_value]) {
-          int index = buffer.peek();
-          AutomatonNode node = automaton.makeTransition(index, label);
-          if (node != null) {
-            track.add(node.getIndex());
-          } else {
-            
+    int i = 1;
+    char next_digit = digital_number.charAt(i);
+    int next_value = Character.getNumericValue(next_digit);
+    
+    while (!track.isEmpty()) {
+      for (char label : LookupTable.map[next_value]) {
+        int index = buffer.peek();
+        AutomatonNode node = automaton.makeTransition(index, label);
+        if (node != null) {
+          track.add(node.getIndex());
+          if (node.isTerminal()) {
+            terminal_nodes.add(node);
           }
         }
-        buffer.poll();
-        track.poll();
-        if (buffer.isEmpty()) {
-          buffer.addAll(track);
-          ++i;
-          next_digit = digital_number.charAt(i);
-          next_value = Character.getNumericValue(next_digit);
-        }
       }
+      buffer.poll();
+      track.poll();
+      if (buffer.isEmpty() && !track.isEmpty()) {
+        buffer.addAll(track);
+        ++i;
+        next_digit = digital_number.charAt(i);
+        next_value = Character.getNumericValue(next_digit);
+      }
+    }
+    // prefix reached end of automaton
         
         
         
@@ -150,7 +155,7 @@ public class Solver {
 //          break;
 //        }
         
-    }
+
     
     String digital_suffix = digital_number.substring(suffix_index);
     char first_digit = digital_suffix.charAt(0);
