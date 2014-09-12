@@ -51,15 +51,16 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    List<AutomatonNode> terminal_nodes = new ArrayList<>(3000);
+    List<StringBuilder> answer_ctor = new ArrayList<>(3000);
+    Map<Integer, List<AutomatonNode>> prefix_representation = new HashMap<>();
     
     Queue<Integer> track = new LinkedList<>();  // explored, but not visited nodes
     Queue<Integer> buffer = new LinkedList<>();  // previous iteration backup
     track.add(automaton.getNode(0).getIndex());  // start walking from root node
     buffer.addAll(track);
     
-    int i = 1;
-    char next_digit = digital_number.charAt(i);
+    int prefix_last_index = 1;
+    char next_digit = digital_number.charAt(prefix_last_index);
     int next_value = Character.getNumericValue(next_digit);
     
     while (!track.isEmpty()) {
@@ -69,7 +70,10 @@ public class Solver {
         if (node != null) {
           track.add(node.getIndex());
           if (node.isTerminal()) {
-            terminal_nodes.add(node);
+            if (prefix_representation.get(prefix_last_index) == null) {
+              prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
+            }
+            prefix_representation.get(prefix_last_index).add(node);
           }
         }
       }
@@ -77,24 +81,30 @@ public class Solver {
       track.poll();
       if (buffer.isEmpty() && !track.isEmpty()) {
         buffer.addAll(track);
-        ++i;
-        next_digit = digital_number.charAt(i);
+        ++prefix_last_index;
+        next_digit = digital_number.charAt(prefix_last_index);
         next_value = Character.getNumericValue(next_digit);
       }
     }
-    // prefix reached end of automaton
-    List<String> prefixes = gatherWords(automaton, terminal_nodes);
-    // TODO: union results with delimeter
-    
-    // process suffix of digital number recursively
-    String digital_suffix = digital_number.substring(i);
-    char first_digit = digital_suffix.charAt(0);
-    List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
-    for (Automaton subautomaton : accept_automata) {
-      List<String> subanswer = getAllWords(subautomaton, digital_suffix);
-      String delimeter = " ### ";
-      answer.add(delimeter);
-      answer.addAll(subanswer);
+
+    for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
+      List<AutomatonNode> terminal_nodes = entry.getValue();
+      List<String> prefix_words = gatherWords(automaton, terminal_nodes);
+      for (String word : prefix_words) {
+        answer_ctor.add(new StringBuilder().append(word).append(" "));
+      }
+      
+      String digital_suffix = digital_number.substring(entry.getKey() + 1);
+      char first_digit = digital_suffix.charAt(0);
+      List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
+      for (Automaton subautomaton : accept_automata) {
+        List<String> subanswer = getAllWords(subautomaton, digital_suffix);
+        for (StringBuilder preword : answer_ctor) {
+          for (String subword : subanswer) {
+            answer.add(preword.toString() + subword);
+          }
+        }
+      }
     }
     
     return answer;
