@@ -45,11 +45,15 @@ public class Solver {
     char first_digit = digital_number.charAt(0);
     List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
     if (accept_automata.isEmpty()) {
-      // no word representation for such number
+      StringBuilder single_digit_prefix = new StringBuilder().append(first_digit).append(" ");
+      List<String> subanswer = processNumber(digital_number.substring(1));
+      for (String word : subanswer) {
+        answer.add(single_digit_prefix + word);
+      }
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-      //System.out.println("##### " + automaton + " #####################  ");
+//    System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
 //      for (String word : subanswer) {
@@ -73,7 +77,7 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
+    //System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
 
     if (digital_number.length() == 1) {
       answer.add(digital_number);  // digit is encoded by itself
@@ -152,7 +156,7 @@ public class Solver {
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
+      //System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
