@@ -69,7 +69,6 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    System.out.println("NUMBER: " + digital_number);
 
     if (digital_number.length() == 1) {
       answer.add(digital_number);  // digit is encoded by itself
@@ -148,11 +147,10 @@ public class Solver {
       List<AutomatonNode> terminal_nodes = entry.getValue();
       List<String> prefix_words = gatherWords(automaton, terminal_nodes);
       for (String word : prefix_words) {
-        answer_ctor.add(new StringBuilder().append(word).append(" "));
+        answer_ctor.add(new StringBuilder().append(word));
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
@@ -160,13 +158,16 @@ public class Solver {
           List<String> subanswer = getAllWords(subautomaton, digital_suffix);
           for (StringBuilder preword : answer_ctor) {
             for (String subword : subanswer) {
-              answer.add(preword.toString() + subword);
+              answer.add(preword.toString() + " " + subword);
             }
           }
         }
       } else {
         for (StringBuilder preword : answer_ctor) {
-          answer.add(preword.toString());
+          String word = preword.toString();
+          if (word.length() == digital_number.length()) {
+            answer.add(word);
+          }
         }
       }
     }
