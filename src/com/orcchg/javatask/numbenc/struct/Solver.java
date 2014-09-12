@@ -69,6 +69,7 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
+    System.out.println("NUMBER: " + digital_number);
 
     if (digital_number.length() == 1) {
       answer.add(digital_number);  // digit is encoded by itself
@@ -149,6 +150,7 @@ public class Solver {
       for (String word : prefix_words) {
         answer_ctor.add(new StringBuilder().append(word).append(" "));
       }
+      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1));
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
       if (!digital_suffix.isEmpty()) {
@@ -161,6 +163,10 @@ public class Solver {
               answer.add(preword.toString() + subword);
             }
           }
+        }
+      } else {
+        for (StringBuilder preword : answer_ctor) {
+          answer.add(preword.toString());
         }
       }
     }
