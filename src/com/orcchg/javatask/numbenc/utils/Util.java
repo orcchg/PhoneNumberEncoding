@@ -30,4 +30,24 @@ public class Util {
     List<Object> result = Arrays.asList(set.toArray());
     return (List<String>)(List<?>) result;
   }
+  
+  public static boolean hasAdjacentDigits(final String input_string) {
+    // remove spaces
+    String string = input_string.replaceAll(" ", "");
+    for (int i = 1; i + 1 < string.length(); /* no-op */) {
+      if (Character.isDigit(string.charAt(i))) {
+        if (Character.isDigit(string.charAt(i - 1)) ||
+            Character.isDigit(string.charAt(i + 1))) {
+          return true;
+        } else {
+          i += 3;
+          continue;
+        }
+      } else {
+        i += 2;
+        continue;
+      }
+    }
+    return false;
+  }
 }

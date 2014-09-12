@@ -49,15 +49,15 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-      System.out.println("##### " + automaton + " #####################  ");
+      //System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
-      for (String word : subanswer) {
-        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
-      }
+//      for (String word : subanswer) {
+//        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
+//      }
     }
 
-    return Util.removeDuplicates(answer);
+    return culling(answer);
   }
   
   @Override
@@ -125,22 +125,6 @@ public class Solver {
         
         next_digit = digital_number.charAt(prefix_last_index);
         next_value = Character.getNumericValue(next_digit);
-        
-      } else if (buffer.isEmpty() && track.isEmpty()) {
-        if (null_counter == LookupTable.map[next_value].length * vertex_counter) {
-          null_counter = 0;
-          next_digit = digital_number.charAt(prefix_last_index);
-          next_value = Character.getNumericValue(next_digit);
-          
-//          if (prefix_representation.get(prefix_last_index) == null) {
-//            prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
-//          }
-//          AutomatonNode node = new AutomatonNode.Builder()
-//                                  .setParentNodeIndex(0)
-//                                  .setLabelFromParent(next_digit)
-//                                  .build();
-//          prefix_representation.get(prefix_last_index).add(node);
-        }
       }
     }
     
@@ -225,5 +209,16 @@ public class Solver {
       }
     }
     return accept_automata;
+  }
+  
+  private List<String> culling(final List<String> answer_with_mistakes) {
+    List<String> no_duplicates = Util.removeDuplicates(answer_with_mistakes);
+    List<String> answer = new ArrayList<>(3000);
+    for (String word : no_duplicates) {
+      if (!Util.hasAdjacentDigits(word)) {
+        answer.add(word);
+      }
+    }
+    return answer;
   }
 }
