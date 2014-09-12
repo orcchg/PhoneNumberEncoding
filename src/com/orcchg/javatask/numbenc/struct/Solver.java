@@ -28,9 +28,15 @@ public class Solver {
     return mDictionary.get(label);
   }
   
-  public void solve(final String number) {
+  public List<String> solve(final String number) {
     String digital_number = Util.remainDigitsOnly(number);
-    processNumber(digital_number);
+    List<String> answer = processNumber(digital_number);
+    List<String> formatted_answer = new ArrayList<>(3000);
+    String prefix = new StringBuilder().append(number).append(": ").toString();
+    for (String line : answer) {
+      formatted_answer.add(prefix + line);
+    }
+    return formatted_answer;
   }
   
   public List<String> processNumber(final String digital_number) {
