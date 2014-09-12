@@ -53,12 +53,12 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-//    System.out.println("##### " + automaton + " #####################  ");
+    System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
-//      for (String word : subanswer) {
-//        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
-//      }
+      for (String word : subanswer) {
+        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
+      }
     }
 
     return culling(answer);
@@ -77,7 +77,7 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    //System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
+    System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
 
     if (digital_number.length() == 1) {
       answer.add(digital_number);  // digit is encoded by itself
@@ -156,7 +156,7 @@ public class Solver {
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      //System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
+      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
@@ -187,10 +187,10 @@ public class Solver {
       StringBuilder reverted_word = new StringBuilder();
       while (node.getParentNodeIndex() != AutomatonNode.EDGE_IS_ABSENT) {
         char label = node.getLabelFromParent();
-        if (node.hasUmlaut()) {
-          reverted_word.append('"');
-        }
-        if (node.isUpperCase()) {
+        if (Util.isUmlaut(label)) {
+          char converted = Util.convertFromUmlaut(label);
+          reverted_word.append('"').append(converted);
+        } else if (node.isUpperCase()) {
           reverted_word.append(Character.toUpperCase(label));
         } else {
           reverted_word.append(label);

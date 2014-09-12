@@ -50,4 +50,47 @@ public class Util {
     }
     return false;
   }
+  
+  public static char convertToUmlaut(char character) {
+    char converted = 0;
+    switch (character) {
+      case 'a':
+        converted = '{';
+        break;
+      case 'o':
+        converted = '|';
+        break;
+      case 'u':
+        converted = '}';
+        break;
+      default:
+        throw new IllegalArgumentException("Unable to convert [" + character + "] to umlaut.");
+    }
+    return converted;
+  }
+  
+  public static boolean isUmlaut(char character) {
+    if (character == '{' || character == '|' || character == '}') {
+      return true;
+    }
+    return false;
+  }
+  
+  public static char convertFromUmlaut(char character) {
+    char converted = 0;
+    switch (character) {
+      case '{':
+        converted = 'a';
+        break;
+      case '|':
+        converted = 'o';
+        break;
+      case '}':
+        converted = 'u';
+        break;
+      default:
+        throw new IllegalArgumentException("Character [" + character + "] has no mapping on set of umlauts.");
+    }
+    return converted;
+  }
 }

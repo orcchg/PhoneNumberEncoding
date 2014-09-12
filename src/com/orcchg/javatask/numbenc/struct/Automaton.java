@@ -29,10 +29,13 @@ public class Automaton {
   
   public void addWord(final String word) {
     int node_index = 0;
-    for (char label : word.toCharArray()) {
+    for (int i = 0; i < word.length(); ++i) {
+      char label = word.charAt(i);
       if (Util.isQuote(label)) {
-        mNodes.get(node_index).setUmlaut(true);
         continue;
+      }
+      if ((i + 1 < word.length()) && Util.isQuote(word.charAt(i + 1))) {
+        label = Util.convertToUmlaut(label);
       }
       
       boolean upper_case = Character.isUpperCase(label);

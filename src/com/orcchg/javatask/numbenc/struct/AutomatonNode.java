@@ -7,12 +7,11 @@ public class AutomatonNode {
   private final int mIndexInAutomaton;
   private final int mParentNodeIndex;
   private final char mLabelFromParent;
-  private boolean mHasUmlaut;  // support data
   private boolean mIsUpperCase;  // support data
   private boolean mIsTerminal;
   private final ArrayList<Integer> mTransitions;
   
-  static final int ALPHABET_SIZE = 26;
+  static final int ALPHABET_SIZE = 29;
   static final int EDGE_IS_ABSENT = -1;
   
   /* Construction */
@@ -21,7 +20,6 @@ public class AutomatonNode {
     mIndexInAutomaton = builder.mIndexInAutomaton;
     mParentNodeIndex = builder.mParentNodeIndex;
     mLabelFromParent = builder.mLabelFromParent;
-    mHasUmlaut = builder.mHasUmlaut;
     mIsUpperCase = builder.mIsUpperCase;
     mIsTerminal = builder.mIsTerminal;
     mTransitions = new ArrayList<Integer>(Collections.nCopies(ALPHABET_SIZE, EDGE_IS_ABSENT));
@@ -92,10 +90,6 @@ public class AutomatonNode {
     return mLabelFromParent;
   }
   
-  public boolean hasUmlaut() {
-    return mHasUmlaut;
-  }
-  
   public boolean isUpperCase() {
     return mIsUpperCase;
   }
@@ -106,10 +100,6 @@ public class AutomatonNode {
   
   public ArrayList<Integer> getTransitions() {
     return mTransitions;
-  }
-  
-  public void setUmlaut(boolean flag) {
-    mHasUmlaut = flag;
   }
   
   public void setTerminal(boolean flag) {
@@ -132,9 +122,6 @@ public class AutomatonNode {
       representation.append(Character.toUpperCase(mLabelFromParent));
     } else {
       representation.append(mLabelFromParent);
-    }
-    if (mHasUmlaut) {
-      representation.append('"');
     }
     if (mIsTerminal) {
       representation.append("}T ");
