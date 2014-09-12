@@ -42,7 +42,10 @@ public class Solver {
       // no word representation for such number
       return answer;
     }
-    // TODO: calculate answer
+    for (Automaton automaton : accept_automata) {
+      List<String> subanswer = getAllWords(automaton, digital_number);
+      answer.addAll(subanswer);
+    }
 
     return answer;
   }
@@ -63,6 +66,8 @@ public class Solver {
     char next_digit = digital_number.charAt(prefix_last_index);
     int next_value = Character.getNumericValue(next_digit);
     
+    int vertex_counter = 1;
+    int null_counter = 0;
     while (!track.isEmpty()) {
       for (char label : LookupTable.map[next_value]) {
         int index = buffer.peek();
@@ -75,16 +80,36 @@ public class Solver {
             }
             prefix_representation.get(prefix_last_index).add(node);
           }
+        } else {
+          ++null_counter;
         }
       }
+      
       buffer.poll();
       track.poll();
+      
       if (buffer.isEmpty() && !track.isEmpty()) {
         buffer.addAll(track);
+        vertex_counter = buffer.size();
         ++prefix_last_index;
-        next_digit = digital_number.charAt(prefix_last_index);
-        next_value = Character.getNumericValue(next_digit);
+        
+      } else if (buffer.isEmpty() && track.isEmpty()) {
+        if (null_counter == LookupTable.map[next_value].length * vertex_counter) {
+          // digit is encoded by itself
+          null_counter = 0;
+          if (prefix_representation.get(prefix_last_index) == null) {
+            prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
+          }
+          AutomatonNode node = new AutomatonNode.Builder()
+                                  .setParentNodeIndex(0)
+                                  .setLabelFromParent(next_digit)
+                                  .build();
+          prefix_representation.get(prefix_last_index).add(node);
+          ++prefix_last_index;
+        }
       }
+      next_digit = digital_number.charAt(prefix_last_index);
+      next_value = Character.getNumericValue(next_digit);
     }
 
     for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
@@ -124,6 +149,7 @@ public class Solver {
         } else {
           reverted_word.append(label);
         }
+        node = automaton.getNode(node.getParentNodeIndex());
       }
       reverted_word.append(automaton.getID());
       String word = reverted_word.reverse().toString();
