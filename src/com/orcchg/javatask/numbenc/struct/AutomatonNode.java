@@ -3,6 +3,8 @@ package com.orcchg.javatask.numbenc.struct;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.orcchg.javatask.numbenc.utils.Util;
+
 public class AutomatonNode {
   private final int mIndexInAutomaton;
   private final int mParentNodeIndex;
@@ -118,7 +120,10 @@ public class AutomatonNode {
                                       .append(": ")
                                       .append(mParentNodeIndex)
                                       .append("<-- ");
-    if (mIsUpperCase) {
+    if (Util.isUmlaut(mLabelFromParent)) {
+      representation.append(Util.convertFromUmlaut(mLabelFromParent))
+                    .append('"');
+    } else if (mIsUpperCase) {
       representation.append(Character.toUpperCase(mLabelFromParent));
     } else {
       representation.append(mLabelFromParent);
