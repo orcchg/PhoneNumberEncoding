@@ -49,8 +49,12 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
+      System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
+      for (String word : subanswer) {
+        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
+      }
     }
 
     return Util.removeDuplicates(answer);
@@ -69,6 +73,7 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
+    System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
 
     if (digital_number.length() == 1) {
       answer.add(digital_number);  // digit is encoded by itself
@@ -112,6 +117,7 @@ public class Solver {
       if (buffer.isEmpty() && !track.isEmpty()) {
         buffer.addAll(track);
         vertex_counter = buffer.size();
+        null_counter = 0;
         ++prefix_last_index;
         if (prefix_last_index >= digital_number.length()) {
           break;
@@ -122,25 +128,36 @@ public class Solver {
         
       } else if (buffer.isEmpty() && track.isEmpty()) {
         if (null_counter == LookupTable.map[next_value].length * vertex_counter) {
-          // digit is encoded by itself
           null_counter = 0;
-          if (prefix_representation.get(prefix_last_index) == null) {
-            prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
-          }
-          AutomatonNode node = new AutomatonNode.Builder()
-                                  .setParentNodeIndex(0)
-                                  .setLabelFromParent(next_digit)
-                                  .build();
-          prefix_representation.get(prefix_last_index).add(node);
-          ++prefix_last_index;
-          if (prefix_last_index >= digital_number.length()) {
-            break;
-          }
-          
           next_digit = digital_number.charAt(prefix_last_index);
           next_value = Character.getNumericValue(next_digit);
+          
+//          if (prefix_representation.get(prefix_last_index) == null) {
+//            prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
+//          }
+//          AutomatonNode node = new AutomatonNode.Builder()
+//                                  .setParentNodeIndex(0)
+//                                  .setLabelFromParent(next_digit)
+//                                  .build();
+//          prefix_representation.get(prefix_last_index).add(node);
         }
       }
+    }
+    
+    if (prefix_last_index == 1) {
+      // digit is encoded by itself
+      --prefix_last_index;
+      next_digit = digital_number.charAt(prefix_last_index);
+      next_value = Character.getNumericValue(next_digit);
+      
+      if (prefix_representation.get(prefix_last_index) == null) {
+        prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
+      }
+      AutomatonNode node = new AutomatonNode.Builder()
+                              .setParentNodeIndex(0)
+                              .setLabelFromParent(next_digit)
+                              .build();
+      prefix_representation.get(prefix_last_index).add(node);
     }
 
     for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
@@ -151,6 +168,7 @@ public class Solver {
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
+      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
