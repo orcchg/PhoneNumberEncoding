@@ -29,14 +29,18 @@ public class Automaton {
   
   public void addWord(final String word) {
     int node_index = 0;
-    for (char label : word.toCharArray()) {
+    String cropped_word = Util.removeFirstChar(word);
+    
+    for (char label : cropped_word.toCharArray()) {
       if (Util.isQuote(label)) {
         mNodes.get(node_index).setUmlaut(true);
         continue;
       }
+      
       boolean upper_case = Character.isUpperCase(label);
       label = Character.toLowerCase(label);
       int char_index = Util.getCharShift(label);
+      
       if (isEdgeAbsent(char_index, node_index)) {
         AutomatonNode node = new AutomatonNode.Builder()
                                 .setIndex(mSizeOfAutomaton)
@@ -48,19 +52,32 @@ public class Automaton {
         mNodes.get(node_index).setTransition(char_index, mSizeOfAutomaton);
         ++mSizeOfAutomaton;
       }
-      node_index = mNodes.get(node_index).getTransitions().get(label);
+      node_index = mNodes.get(node_index).getTransitions().get(char_index);
     }
     mNodes.get(node_index).setTerminal(true);  // entire word corresponds to terminal state
   }
   
   public AutomatonNode makeTransition(int from_node, char label) {
     label = Character.toLowerCase(label);
-    int to_node = mNodes.get(from_node).getTransitions().get(label);
+    int char_index = Util.getCharShift(label);
+    int to_node = mNodes.get(from_node).getTransitions().get(char_index);
     if (to_node != AutomatonNode.EDGE_IS_ABSENT) {
       return mNodes.get(to_node);
     } else {
       return null;
     }
+  }
+  
+  @Override
+  public String toString() {
+    StringBuilder representation = new StringBuilder()
+                                      .append("[")
+                                      .append(mID)
+                                      .append("]: ");
+    for (AutomatonNode node : mNodes) {
+      representation.append(node.toString());
+    }
+    return representation.toString();
   }
   
   /* Private methods */

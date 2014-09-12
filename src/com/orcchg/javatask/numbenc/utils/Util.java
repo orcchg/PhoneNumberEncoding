@@ -13,4 +13,8 @@ public class Util {
     String digital_number = number.replaceAll("-|/", "");
     return digital_number;
   }
+  
+  public static String removeFirstChar(final String string) {
+    return string.substring(1);
+  }
 }

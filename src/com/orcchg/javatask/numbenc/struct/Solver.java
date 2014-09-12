@@ -56,10 +56,24 @@ public class Solver {
     return answer;
   }
   
+  @Override
+  public String toString() {
+    StringBuilder representation = new StringBuilder();
+    for (Map.Entry<Character, Automaton> entry : mDictionary.entrySet()) {
+      representation.append(entry.getValue()).append("\n\n");
+    }
+    return representation.toString();
+  }
+  
   /* Private methods */
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
+    if (digital_number.length() == 1) {
+      answer.add(digital_number);  // digit is encoded by itself
+      return answer;
+    }
+    
     List<StringBuilder> answer_ctor = new ArrayList<>(3000);
     Map<Integer, List<AutomatonNode>> prefix_representation = new HashMap<>();
     

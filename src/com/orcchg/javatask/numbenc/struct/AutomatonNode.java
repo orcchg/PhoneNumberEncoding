@@ -38,7 +38,7 @@ public class AutomatonNode {
     public Builder() {
       mIndexInAutomaton = 0;
       mParentNodeIndex = EDGE_IS_ABSENT;
-      mLabelFromParent = 0;
+      mLabelFromParent = '*';
       mHasUmlaut = false;
       mIsTerminal = false;
     }
@@ -118,5 +118,29 @@ public class AutomatonNode {
   
   public void setTransition(int char_index, int transition) {
     mTransitions.set(char_index, transition);
+  }
+  
+  @Override
+  public String toString() {
+    StringBuilder representation = new StringBuilder()
+                                      .append(" {")
+                                      .append(mIndexInAutomaton)
+                                      .append(": ")
+                                      .append(mParentNodeIndex)
+                                      .append("<-- ");
+    if (mIsUpperCase) {
+      representation.append(Character.toUpperCase(mLabelFromParent));
+    } else {
+      representation.append(mLabelFromParent);
+    }
+    if (mHasUmlaut) {
+      representation.append('"');
+    }
+    if (mIsTerminal) {
+      representation.append("}T ");
+    } else {
+      representation.append("} ");
+    }
+    return representation.toString();
   }
 }
