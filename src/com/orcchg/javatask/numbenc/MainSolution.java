@@ -27,7 +27,6 @@ public class MainSolution {
     try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
       String line = null;
       while ((line = br.readLine()) != null) {
-        System.out.println("Number: " + line);
         List<String> answer = mSolver.solve(line);
         for (String word : answer) {
           System.out.println(word);
