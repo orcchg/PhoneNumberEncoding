@@ -29,9 +29,7 @@ public class Automaton {
   
   public void addWord(final String word) {
     int node_index = 0;
-    String cropped_word = Util.removeFirstChar(word);
-    
-    for (char label : cropped_word.toCharArray()) {
+    for (char label : word.toCharArray()) {
       if (Util.isQuote(label)) {
         mNodes.get(node_index).setUmlaut(true);
         continue;

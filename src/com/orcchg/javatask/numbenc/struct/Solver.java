@@ -53,7 +53,7 @@ public class Solver {
       answer.addAll(subanswer);
     }
 
-    return answer;
+    return Util.removeDuplicates(answer);
   }
   
   @Override
@@ -81,7 +81,7 @@ public class Solver {
     
     Queue<Integer> track = new LinkedList<>();  // explored, but not visited nodes
     Queue<Integer> buffer = new LinkedList<>();  // previous iteration backup
-    track.add(automaton.getNode(0).getIndex());  // start walking from root node
+    track.add(automaton.getNode(1).getIndex());  // start walking from root+1 node
     buffer.addAll(track);
     
     int prefix_last_index = 1;
@@ -150,9 +150,9 @@ public class Solver {
       for (String word : prefix_words) {
         answer_ctor.add(new StringBuilder().append(word).append(" "));
       }
-      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1));
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
+      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
@@ -190,7 +190,6 @@ public class Solver {
         }
         node = automaton.getNode(node.getParentNodeIndex());
       }
-      reverted_word.append(automaton.getID());
       String word = reverted_word.reverse().toString();
       answer.add(word);
     }
