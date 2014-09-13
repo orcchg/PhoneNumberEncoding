@@ -53,12 +53,8 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-      //System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
-      //for (String word : subanswer) {
-      //  System.out.println(word + "  #####  a[" + automaton.getID() + "]");
-      //}
     }
 
     answer = cullInconsistentByLength(digital_number, answer);
@@ -78,10 +74,8 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    //System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
 
     if (digital_number.length() == 1) {
-      //System.out.println("SEFL ENCODED(single): " + digital_number);
       answer.add(digital_number);  // digit is encoded by itself
       return answer;
     }
@@ -132,7 +126,6 @@ public class Solver {
       --prefix_last_index;
       next_digit = digital_number.charAt(prefix_last_index);
       next_value = Character.getNumericValue(next_digit);
-      //System.out.println("SEFL ENCODED: " + next_digit);
       
       if (prefix_representation.get(prefix_last_index) == null) {
         prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
@@ -153,36 +146,28 @@ public class Solver {
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      //System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
-      //Util.printList("Prefix: ", prefix_words);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
         for (Automaton subautomaton : accept_automata) {
           List<String> subanswer = getAllWords(subautomaton, digital_suffix);
-          //Util.printList("SUB: " + subautomaton + ";; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "|" + digital_suffix + "]  >>>>>", subanswer);
           for (StringBuilder preword : answer_ctor) {
-            //System.out.println("### PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "|" + digital_suffix + "]:  pre: " + preword);
             for (String subword : subanswer) {
-              //System.out.println("CONCAT: " + preword.toString() + "+" + subword);
               answer.add(preword.toString() + " " + subword);
             }
           }
         }
       } else {
         for (StringBuilder preword : answer_ctor) {
-          //System.out.println("PREWORD: " + preword);
           String word = preword.toString();
           String alpha_word = Util.remainLettersOnly(word);
           if (alpha_word.length() == digital_number.length()) {
             answer.add(word);
           }
         }
-        //Util.printList("NO SUFFIX: ", answer);
       }
     }
 
-    //Util.printList("ANSWER:", answer);
     return answer;
   }
   
