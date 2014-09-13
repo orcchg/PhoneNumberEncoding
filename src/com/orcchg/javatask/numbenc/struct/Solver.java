@@ -61,6 +61,7 @@ public class Solver {
       //}
     }
 
+    answer = cullInconsistentByLength(digital_number, answer);
     return culling(answer);
   }
   
@@ -142,7 +143,7 @@ public class Solver {
                               .build();
       prefix_representation.get(prefix_last_index).add(node);
     }
-
+    
     for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
       List<StringBuilder> answer_ctor = new ArrayList<>(3000);
       List<AutomatonNode> terminal_nodes = entry.getValue();
@@ -217,6 +218,17 @@ public class Solver {
       }
     }
     return accept_automata;
+  }
+  
+  private List<String> cullInconsistentByLength(final String digital_number, final List<String> answer_with_mistakes) {
+    List<String> answer = new ArrayList<>(3000);
+    for (String word : answer_with_mistakes) {
+      String alpha_word = Util.remainLettersOnly(word);
+      if (alpha_word.length() == digital_number.length()) {
+        answer.add(word);
+      }
+    }
+    return answer;
   }
   
   private List<String> culling(final List<String> answer_with_mistakes) {

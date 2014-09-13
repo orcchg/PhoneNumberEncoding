@@ -20,7 +20,7 @@ public class Util {
   }
   
   public static String remainLettersOnly(final String word) {
-    String alpha_word = word.replaceAll("\"", "");
+    String alpha_word = word.replaceAll("\"| ", "");
     return alpha_word;
   }
   
