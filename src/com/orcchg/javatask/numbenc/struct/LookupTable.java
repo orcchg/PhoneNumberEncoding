@@ -1,6 +1,8 @@
 package com.orcchg.javatask.numbenc.struct;
 
 public class LookupTable {
+  public static final int TABLE_SIZE = 29;
+  
   public static char[][] map = new char[][]{
     {'e'},                 // 0
     {'j', 'n', 'q'},       // 1

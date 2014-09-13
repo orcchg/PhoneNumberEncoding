@@ -1,6 +1,7 @@
 package com.orcchg.javatask.numbenc.struct;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.orcchg.javatask.numbenc.utils.Util;
 
@@ -10,12 +11,14 @@ public class Automaton {
   
   private Character mID;
   private int mSizeOfAutomaton;  // total nodes in automaton
-  private ArrayList<AutomatonNode> mNodes;
+  private List<AutomatonNode> mNodes;
+  private List<Integer> mNodesFromRoot;
   
   public Automaton(char id) {
     mID = id;
     mNodes = new ArrayList<AutomatonNode>(APPROXIMATE_TOTAL_WORDS);
-    mNodes.add(new AutomatonNode.Builder().build());
+    mNodes.add(new AutomatonNode.Builder().build());  // add root node
+    mNodesFromRoot = new ArrayList<>(AutomatonNode.ALPHABET_SIZE);
     mSizeOfAutomaton = 1;
   }
   
@@ -25,6 +28,10 @@ public class Automaton {
   
   public AutomatonNode getNode(int index) {
     return mNodes.get(index);
+  }
+  
+  public List<Integer> getNodesFromRoot() {
+    return mNodesFromRoot;
   }
   
   public void addWord(final String word) {
@@ -51,6 +58,9 @@ public class Automaton {
                                 .build();
         mNodes.add(node);
         mNodes.get(node_index).setTransition(char_index, mSizeOfAutomaton);
+        if (node.getParentNodeIndex() == AutomatonNode.INDEX_OF_ROOT) {
+          mNodesFromRoot.add(node.getIndex());
+        }
         ++mSizeOfAutomaton;
       }
       node_index = mNodes.get(node_index).getTransitions().get(char_index);

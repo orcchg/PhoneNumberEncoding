@@ -13,7 +13,7 @@ public class Solver {
   private final Map<Character, Automaton> mDictionary;
   
   public Solver() {
-    mDictionary = new HashMap<Character, Automaton>(29);
+    mDictionary = new HashMap<Character, Automaton>(26);  // one automaton per letter
   }
   
   public Automaton addEmptyAutomaton(char label) {
@@ -88,9 +88,9 @@ public class Solver {
     
     Map<Integer, List<AutomatonNode>> prefix_representation = new HashMap<>();
     
-    Queue<Integer> track = new LinkedList<>();  // explored, but not visited nodes
+    Queue<Integer> track = new LinkedList<>();   // explored, but not visited nodes
     Queue<Integer> buffer = new LinkedList<>();  // previous iteration backup
-    track.add(automaton.getNode(1).getIndex());  // start walking from root+1 node
+    track.addAll(automaton.getNodesFromRoot());  // start walking at nodes origin from root
     buffer.addAll(track);
     
     int prefix_last_index = 1;

@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.orcchg.javatask.numbenc.struct.Automaton;
 import com.orcchg.javatask.numbenc.struct.Solver;
-import com.orcchg.javatask.numbenc.utils.Util;
 
 public class MainSolution {
   private Solver mSolver;
@@ -43,9 +42,6 @@ public class MainSolution {
       String line = null;
       while ((line = br.readLine()) != null) {
         char label = line.charAt(0);
-        if ((line.length() > 1) && Util.isQuote(line.charAt(1))) {
-          label = Util.convertToUmlaut(label);
-        }
         Automaton automaton = mSolver.getAutomaton(label);
         if (automaton == null) {
           automaton = mSolver.addEmptyAutomaton(label);

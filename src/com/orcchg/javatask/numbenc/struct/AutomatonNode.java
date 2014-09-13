@@ -13,7 +13,8 @@ public class AutomatonNode {
   private boolean mIsTerminal;
   private final ArrayList<Integer> mTransitions;
   
-  static final int ALPHABET_SIZE = 29;
+  static final int ALPHABET_SIZE = LookupTable.TABLE_SIZE;
+  static final int INDEX_OF_ROOT = 0;
   static final int EDGE_IS_ABSENT = -1;
   
   /* Construction */
@@ -31,15 +32,13 @@ public class AutomatonNode {
     private int mIndexInAutomaton;
     private int mParentNodeIndex;
     private char mLabelFromParent;
-    private boolean mHasUmlaut;
     private boolean mIsUpperCase;
     private boolean mIsTerminal;
     
     public Builder() {
-      mIndexInAutomaton = 0;
+      mIndexInAutomaton = INDEX_OF_ROOT;
       mParentNodeIndex = EDGE_IS_ABSENT;
       mLabelFromParent = '*';
-      mHasUmlaut = false;
       mIsTerminal = false;
     }
     
@@ -55,11 +54,6 @@ public class AutomatonNode {
     
     public Builder setLabelFromParent(char label) {
       mLabelFromParent = label;
-      return this;
-    }
-    
-    public Builder setUmlaut(boolean flag) {
-      mHasUmlaut = flag;
       return this;
     }
     
