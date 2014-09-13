@@ -19,6 +19,11 @@ public class Util {
     return digital_number;
   }
   
+  public static String remainLettersOnly(final String word) {
+    String alpha_word = word.replaceAll("\"", "");
+    return alpha_word;
+  }
+  
   public static String removeFirstChar(final String string) {
     return string.substring(1);
   }
@@ -34,6 +39,12 @@ public class Util {
   public static boolean hasAdjacentDigits(final String input_string) {
     // remove spaces
     String string = input_string.replaceAll(" ", "");
+    if (string.length() == 2 &&
+        Character.isDigit(string.charAt(0)) &&
+        Character.isDigit(string.charAt(1))) {
+      return true;
+    }
+    
     for (int i = 1; i + 1 < string.length(); /* no-op */) {
       if (Character.isDigit(string.charAt(i))) {
         if (Character.isDigit(string.charAt(i - 1)) ||
@@ -55,12 +66,15 @@ public class Util {
     char converted = 0;
     switch (character) {
       case 'a':
+      case 'A':
         converted = '{';
         break;
       case 'o':
+      case 'O':
         converted = '|';
         break;
       case 'u':
+      case 'U':
         converted = '}';
         break;
       default:

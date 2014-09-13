@@ -13,7 +13,7 @@ public class Solver {
   private final Map<Character, Automaton> mDictionary;
   
   public Solver() {
-    mDictionary = new HashMap<Character, Automaton>(26);
+    mDictionary = new HashMap<Character, Automaton>(29);
   }
   
   public Automaton addEmptyAutomaton(char label) {
@@ -53,11 +53,11 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-      ////System.out.println("##### " + automaton + " #####################  ");
+      //System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
       //for (String word : subanswer) {
-      //  //System.out.println(word + "  #####  a[" + automaton.getID() + "]");
+      //  System.out.println(word + "  #####  a[" + automaton.getID() + "]");
       //}
     }
 
@@ -96,8 +96,6 @@ public class Solver {
     char next_digit = digital_number.charAt(prefix_last_index);
     int next_value = Character.getNumericValue(next_digit);
     
-    //int vertex_counter = 1;
-    //int null_counter = 0;
     while (!track.isEmpty()) {
       for (char label : LookupTable.map[next_value]) {
         int index = buffer.peek();
@@ -110,8 +108,6 @@ public class Solver {
             }
             prefix_representation.get(prefix_last_index).add(node);
           }
-        } else {
-          //++null_counter;
         }
       }
       
@@ -120,8 +116,6 @@ public class Solver {
       
       if (buffer.isEmpty() && !track.isEmpty()) {
         buffer.addAll(track);
-        //vertex_counter = buffer.size();
-        //null_counter = 0;
         ++prefix_last_index;
         if (prefix_last_index >= digital_number.length()) {
           break;
@@ -137,7 +131,7 @@ public class Solver {
       --prefix_last_index;
       next_digit = digital_number.charAt(prefix_last_index);
       next_value = Character.getNumericValue(next_digit);
-      ////System.out.println("SEFL ENCODED: " + next_digit);
+      //System.out.println("SEFL ENCODED: " + next_digit);
       
       if (prefix_representation.get(prefix_last_index) == null) {
         prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
@@ -176,15 +170,18 @@ public class Solver {
         }
       } else {
         for (StringBuilder preword : answer_ctor) {
+          //System.out.println("PREWORD: " + preword);
           String word = preword.toString();
-          if (word.length() == digital_number.length()) {
+          String alpha_word = Util.remainLettersOnly(word);
+          if (alpha_word.length() == digital_number.length()) {
             answer.add(word);
           }
         }
+        //Util.printList("NO SUFFIX: ", answer);
       }
     }
 
-    //Util.printList(answer);
+    //Util.printList("ANSWER:", answer);
     return answer;
   }
   
