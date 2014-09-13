@@ -11,7 +11,7 @@ public class Util {
   }
   
   public static int getCharShift(char character) {
-    return character - 'a';
+    return character - 'A';
   }
   
   public static String remainDigitsOnly(final String number) {

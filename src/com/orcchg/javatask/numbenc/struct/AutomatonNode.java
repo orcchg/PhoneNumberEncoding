@@ -13,7 +13,7 @@ public class AutomatonNode {
   private boolean mIsTerminal;
   private final ArrayList<Integer> mTransitions;
   
-  static final int ALPHABET_SIZE = LookupTable.TABLE_SIZE;
+  static final int ALPHABET_SIZE = 61;  // all possible transitions ('A' - 'z' - '{' - '|' - '}')
   static final int INDEX_OF_ROOT = 0;
   static final int EDGE_IS_ABSENT = -1;
   
