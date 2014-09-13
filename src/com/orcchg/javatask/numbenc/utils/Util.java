@@ -93,4 +93,12 @@ public class Util {
     }
     return converted;
   }
+  
+  public static void printList(final String prefix, final List<String> list) {
+    System.out.print(prefix + " ");
+    for (String word : list) {
+      System.out.print(word + " ");
+    }
+    System.out.println("");
+  }
 }

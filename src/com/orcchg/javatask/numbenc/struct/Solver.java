@@ -53,12 +53,12 @@ public class Solver {
       return answer;
     }
     for (Automaton automaton : accept_automata) {
-    System.out.println("##### " + automaton + " #####################  ");
+      ////System.out.println("##### " + automaton + " #####################  ");
       List<String> subanswer = getAllWords(automaton, digital_number);
       answer.addAll(subanswer);
-      for (String word : subanswer) {
-        System.out.println(word + "  #####  a[" + automaton.getID() + "]");
-      }
+      //for (String word : subanswer) {
+      //  //System.out.println(word + "  #####  a[" + automaton.getID() + "]");
+      //}
     }
 
     return culling(answer);
@@ -77,14 +77,14 @@ public class Solver {
   // --------------------------------------------------------------------------
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
+    //System.out.println("NUMBER: " + digital_number + "  ;; Auto: " + automaton);
 
     if (digital_number.length() == 1) {
+      //System.out.println("SEFL ENCODED(single): " + digital_number);
       answer.add(digital_number);  // digit is encoded by itself
       return answer;
     }
     
-    List<StringBuilder> answer_ctor = new ArrayList<>(3000);
     Map<Integer, List<AutomatonNode>> prefix_representation = new HashMap<>();
     
     Queue<Integer> track = new LinkedList<>();  // explored, but not visited nodes
@@ -96,8 +96,8 @@ public class Solver {
     char next_digit = digital_number.charAt(prefix_last_index);
     int next_value = Character.getNumericValue(next_digit);
     
-    int vertex_counter = 1;
-    int null_counter = 0;
+    //int vertex_counter = 1;
+    //int null_counter = 0;
     while (!track.isEmpty()) {
       for (char label : LookupTable.map[next_value]) {
         int index = buffer.peek();
@@ -111,7 +111,7 @@ public class Solver {
             prefix_representation.get(prefix_last_index).add(node);
           }
         } else {
-          ++null_counter;
+          //++null_counter;
         }
       }
       
@@ -120,8 +120,8 @@ public class Solver {
       
       if (buffer.isEmpty() && !track.isEmpty()) {
         buffer.addAll(track);
-        vertex_counter = buffer.size();
-        null_counter = 0;
+        //vertex_counter = buffer.size();
+        //null_counter = 0;
         ++prefix_last_index;
         if (prefix_last_index >= digital_number.length()) {
           break;
@@ -137,6 +137,7 @@ public class Solver {
       --prefix_last_index;
       next_digit = digital_number.charAt(prefix_last_index);
       next_value = Character.getNumericValue(next_digit);
+      ////System.out.println("SEFL ENCODED: " + next_digit);
       
       if (prefix_representation.get(prefix_last_index) == null) {
         prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
@@ -149,6 +150,7 @@ public class Solver {
     }
 
     for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
+      List<StringBuilder> answer_ctor = new ArrayList<>(3000);
       List<AutomatonNode> terminal_nodes = entry.getValue();
       List<String> prefix_words = gatherWords(automaton, terminal_nodes);
       for (String word : prefix_words) {
@@ -156,14 +158,18 @@ public class Solver {
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
+      //System.out.println("TN [" + terminal_nodes.toString() + "] ;; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "  ;; SUFFIX [" + digital_suffix);
+      //Util.printList("Prefix: ", prefix_words);
       if (!digital_suffix.isEmpty()) {
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
         for (Automaton subautomaton : accept_automata) {
           List<String> subanswer = getAllWords(subautomaton, digital_suffix);
+          //Util.printList("SUB: " + subautomaton + ";; PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "|" + digital_suffix + "]  >>>>>", subanswer);
           for (StringBuilder preword : answer_ctor) {
+            //System.out.println("### PREFIX [" + digital_number.substring(0, entry.getKey() + 1) + "|" + digital_suffix + "]:  pre: " + preword);
             for (String subword : subanswer) {
+              //System.out.println("CONCAT: " + preword.toString() + "+" + subword);
               answer.add(preword.toString() + " " + subword);
             }
           }
@@ -178,6 +184,7 @@ public class Solver {
       }
     }
 
+    //Util.printList(answer);
     return answer;
   }
   
